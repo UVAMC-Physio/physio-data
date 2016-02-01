@@ -5,24 +5,12 @@ Philips.PatientData, pull out waveform data,
 and decode it
 """
 
-# Import modules
-import pyodbc
-import numpy
-
 # Inputs to SQL Query
 patientId = '01e97c88-9241-435d-bdaa-2ae0bacd2230'
 startDateTime = '2016-01-28 00:00:00.000 -05:00'
 endDateTime = '2016-01-29 00:00:00.000 -05:00'
 label = 'aVR'
-
-# Create ODBC connection string and create a connection
-# Then ask it for a cursor
-myServer = 'HSTSPIICDW'
-myDB = 'Philips.PatientData'
-connStr = "Driver=SQL Server; Server=" + myServer + \
-          "; Database=" + myDB + "; Trusted_Connection=yes;"
-connX = pyodbc.connect(connStr)
-cursor = connX.cursor()
+myInputs = [patientId, label, startDateTime, endDateTime]
 
 # Create SQL query and retreive all rows
 # Use triple quotes to easily read SQL Query
@@ -49,18 +37,13 @@ WHERE ews.PatientId = ?
   AND ews.TimeStamp < ?
 ORDER BY ews.SequenceNumber, ews.TimeStamp
     """
-cursor.execute(myQuery, [patientId, label, startDateTime, endDateTime])
-waveFormsSQL = cursor.fetchall()
+    
+# Run query and retrieve data (numpy recarray)
+import dbio
+waveData = dbio.getquery(myQuery, myInputs)
 
-# Close connections
-connX.close()
-
-# Data stored as Row object; similar to tuples,
-# but can access columns by name
-# For each row separately
-
-# Get single row for WaveSample
-waveSamp = waveFormsSQL[3].WaveSamples
+# Export to csv file
+isWritten = dbio.exportarray(waveData, file="waveData.csv")
 
 # Function to decode a single row of encoded waveforms
 def decodewaves(x):

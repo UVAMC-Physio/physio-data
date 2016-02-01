@@ -13,6 +13,8 @@ Created on Mon Jan 25 15:32:59 2016
 # Import modules
 import pyodbc
 import numpy
+from astropy.io import ascii
+import os
 
 # Connect to SQL Server database, execute query, and return
 # the results as a numpy recarray
@@ -20,8 +22,8 @@ def getquery(query, inputs = []):
     
     # Create ODBC connection string and create a connection
     # Then ask it for a cursor
-    myServer = 'HSTSPIICDW'
-    myDB = 'Philips.PatientData'
+    myServer = "HSTSPIICDW"
+    myDB = "Philips.PatientData"
     connStr = "Driver=SQL Server; Server=" + myServer + \
               "; Database=" + myDB + "; Trusted_Connection=yes;"
     connX = pyodbc.connect(connStr)
@@ -39,3 +41,13 @@ def getquery(query, inputs = []):
     
     # Return results
     return(queryResults)
+
+# Export numpy array or recarray to file
+# Currently supports only csv
+def exportarray(array, file="exported_data.csv"):
+    
+    # Write csv file
+    ascii.write(array, file, format='csv')
+    
+    # Return true if successful
+    return(os.path.isfile(file))
