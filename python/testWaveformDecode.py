@@ -10,9 +10,9 @@ import pyodbc
 import numpy
 
 # Inputs to SQL Query
-patientId = '853deb60-f17d-4916-bd5d-698847ffedaa'
-startDateTime = '2016-01-19 00:00:00.000 -05:00'
-endDateTime = '2016-01-20 00:00:00.000 -05:00'
+patientId = '01e97c88-9241-435d-bdaa-2ae0bacd2230'
+startDateTime = '2016-01-28 00:00:00.000 -05:00'
+endDateTime = '2016-01-29 00:00:00.000 -05:00'
 label = 'aVR'
 
 # Create ODBC connection string and create a connection
